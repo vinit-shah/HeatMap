@@ -14,7 +14,7 @@ class BoundingBox:
 class HeatMapGenerator():
     mFeathering = 40
     mMaxContrib = 10
-    mContribClip = 100.0
+    mContribClip = 300.0
 
     def __init__(self, width, height, boundingBoxes):
         self.mWidth = width

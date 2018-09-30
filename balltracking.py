@@ -141,5 +141,5 @@ else:
 cv2.destroyAllWindows()
 
 
-hm = heatmap.HeatMapGenerator(width, height , boundingBoxList)
+hm = heatmap.HeatMapGenerator(600,396 , boundingBoxList)
 hm.computeHeatMap()
