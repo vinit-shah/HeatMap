@@ -33,11 +33,11 @@ class HeatMapGenerator():
             cX = int(x + width/2)
             cY = int(y + height/2)
             for a in range(cX - self.mFeathering, cX + self.mFeathering):
-                print(a)
+                # print(a)
                 if a < 0 or a >= self.mWidth:
                     continue
                 distA = (cX - a)**2
-                print(distA)
+                # print(distA)
                 for b in range(cY - self.mFeathering, cY + self.mFeathering):
                     if b < 0 or b >= self.mHeight :
                         continue
@@ -46,38 +46,17 @@ class HeatMapGenerator():
                     if dist <= self.mFeathering:
                         self.mSumTable[b,a] += (float(self.mFeathering) - dist)/float(self.mFeathering) * self.mMaxContrib
 
-        for i in range(0, self.mHeight):
-            for j in range(0, self.mWidth):
+        for i in range(0, self.mHeight-1):
+            for j in range(0, self.mWidth-1):
                 val = float(self.mSumTable[i,j])/self.mContribClip * 255
-                if val > 0.0:
-                    print(f'Val {i} {j} {val}')
-                self.mHeatMap[i,j] = [val, val, val]
+                # if val > 0.0:
+                print(f'Val {i} {j} {val}')
+                self.mHeatMap[j,i] = [val, val, val]
 
         self.mImg = Image.fromarray(self.mHeatMap, 'RGB')
         self.mImg.save('heatmap.png')
         self.mImg.show()
 
-
-bbs = [
-    BoundingBox(128, 128, 40, 40),
-    BoundingBox(138, 128, 40, 40),
-    BoundingBox(148, 128, 40, 40),
-    BoundingBox(158, 128, 40, 40),
-    BoundingBox(168, 128, 40, 40),
-    BoundingBox(178, 128, 40, 40),
-    BoundingBox(188, 128, 40, 40),
-    BoundingBox(198, 128, 40, 40),
-    BoundingBox(128, 128, 40, 40),
-    BoundingBox(138, 128, 40, 40),
-    BoundingBox(148, 128, 40, 40),
-    BoundingBox(158, 128, 40, 40),
-    BoundingBox(168, 128, 40, 40),
-    BoundingBox(178, 128, 40, 40),
-    BoundingBox(188, 128, 40, 40),
-    BoundingBox(198, 128, 40, 40)
-]
-hm = HeatMapGenerator(512, 512, bbs)
-hm.computeHeatMap()
 
 
 
