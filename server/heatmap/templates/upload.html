@@ -1,0 +1,22 @@
+<html>
+<body>
+	<h1>Upload Video</h1>
+	<form enctype="multipart/form-data" method="POST" action="">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Upload"/>
+	</form>
+
+	{% if file %}
+		<video width='400' controls>
+			<source src='{{ MEDIA_URL }}{{ file }}' type='video/mp4'>
+		</video>
+		<br><br>
+	{% endif %}
+
+	{% if heatmap %}
+		<h1>Heatmap</h1>
+		<image src={{ heatmap }}>
+	{% endif %}
+</body>
+</html>
