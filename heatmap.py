@@ -21,7 +21,7 @@ class HeatMapGenerator():
         self.mHeight = height
         self.mBoundingBoxes = boundingBoxes
         self.mSumTable = np.zeros(shape=(height, width))
-        self.mHeatMap = np.zeros((width, height, 3), dtype=np.uint8)
+        self.mHeatMap = np.zeros((height, width, 3), dtype=np.uint8)
 
     def computeHeatMap(self):
         for bb in self.mBoundingBoxes:
@@ -49,9 +49,10 @@ class HeatMapGenerator():
         for i in range(0, self.mHeight-1):
             for j in range(0, self.mWidth-1):
                 val = float(self.mSumTable[i,j])/self.mContribClip * 255
-                # if val > 0.0:
-                print(f'Val {i} {j} {val}')
-                self.mHeatMap[j,i] = [val, val, val]
+                grayscale = max(0, min(255, int(val)))
+                if grayscale > 255:
+                    print(f'Val {i} {j} {val}')
+                self.mHeatMap[i,j] = [grayscale, grayscale, grayscale]
 
         self.mImg = Image.fromarray(self.mHeatMap, 'RGB')
         self.mImg.save('heatmap.png')
