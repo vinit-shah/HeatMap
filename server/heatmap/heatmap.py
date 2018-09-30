@@ -59,7 +59,3 @@ class HeatMapGenerator():
         buf = StringIO.StringIO()
         self.mImg.save(buf, "PNG")
         return base64.b64encode(buf.getvalue())
-
-
-
-

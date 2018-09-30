@@ -5,34 +5,34 @@ from .models import Video
 from .forms import VideoForm	
 from collections import deque
 from imutils.video import VideoStream
+from .heatmap import BoundingBox, HeatMapGenerator
 import numpy as np
 import argparse
 import cv2
 import imutils
 import time
-import heatmap
 
 # Create your views here.
 def home(request):
 	file = None
-	heatmap = None
+	computedHeatmap = None
 
 	form = VideoForm(request.POST or None, request.FILES or None)
 	if form.is_valid():
 		video = form.save()
 		file = video.file
-		heatmap = genHeatMap('uploads/' + str(file))
-		video.delete() # Unless we want to save this
+		computedHeatmap = genHeatMap('uploads/' + str(file))
 
 	context= {
 	          'file': file,
               'form': form,
-              'heatmap': heatmap
+              'heatmap': computedHeatmap
               }
     
 	return render(request, 'upload.html', context)
 
 def genHeatMap(file):
+
 	# list of tracked points
 	greenLower = (108,16,48)
 	greenUpper = (160,255,255)
@@ -50,6 +50,9 @@ def genHeatMap(file):
 	while True:
 		# grab the current frame
 		frame = vs.read()
+
+		# handle the frame from VideoCapture or VideoStream
+		frame = frame[1]
 
 		# if we are viewing a video and we did not grab a frame,
 		# then we have reached the end of the video
@@ -109,7 +112,7 @@ def genHeatMap(file):
 
 			# otherwise, compute the thickness of the line and
 			# draw the connecting lines
-			thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
+			thickness = int(np.sqrt(64 / float(i + 1)) * 2.5)
 			cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
 
 		# show the frame to our screen
@@ -129,13 +132,7 @@ def genHeatMap(file):
 	print("height")
 	print(height)
 
-	# if we are not using a video file, stop the camera video stream
-	if not args.get("video", False):
-		vs.stop()
-
-	# otherwise, release the camera
-	else:
-		vs.release()
+	vs.release()
 
 	# close all windows
 	cv2.destroyAllWindows()
