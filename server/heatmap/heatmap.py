@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from PIL import Image
 import numpy as np
 import math
-import StringIO
+import io
+import base64
 
 @dataclass
 class BoundingBox:
@@ -56,6 +57,7 @@ class HeatMapGenerator():
                 self.mHeatMap[i,j] = [grayscale, grayscale, grayscale]
 
         self.mImg = Image.fromarray(self.mHeatMap, 'RGB')
-        buf = StringIO.StringIO()
-        self.mImg.save(buf, "PNG")
+        buf = io.BytesIO()
+        self.mImg.save(buf, format="PNG")
+        print('SAVED IMAGE')
         return base64.b64encode(buf.getvalue())
